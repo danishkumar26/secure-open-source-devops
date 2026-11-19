@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     postgres_user: str = "devops_user"
     postgres_password: str = "changeme_in_production"
     postgres_db: str = "secure_devops"
-    database_url: str
+    database_url: str | None = None
 
     redis_host: str = "redis"
     redis_port: int = 6379
