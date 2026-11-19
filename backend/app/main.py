@@ -31,8 +31,4 @@ app.include_router(health_router)
 
 @app.get("/", tags=["root"])
 async def root():
-    return {
-        "message": "Secure Open Source DevOps Platform",
-        "docs": "/docs",
-        "health": "/health",
-    }
+    return {"message": "Secure Open Source DevOps Platform", "docs": "/docs", "health": "/health"}
