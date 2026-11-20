@@ -1,6 +1,6 @@
 """Application configuration loaded from environment variables."""
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -14,7 +14,14 @@ class Settings(BaseSettings):
     postgres_user: str = "devops_user"
     postgres_password: str = "changeme_in_production"
     postgres_db: str = "secure_devops"
-    database_url: str | None = None
+    database_url: str = (
+        "postgresql+psycopg://devops_user:changeme_in_production@localhost:5432/secure_devops"
+    )
+    db_pool_size: int = 5
+    db_max_overflow: int = 10
+
+    log_level: str = "INFO"
+    json_logs: bool = False
 
     redis_host: str = "redis"
     redis_port: int = 6379
@@ -29,9 +36,7 @@ class Settings(BaseSettings):
 
     cors_origins: list[str] = ["http://localhost:3000"]
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
 settings = Settings()
