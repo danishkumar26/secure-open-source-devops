@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.2.0] - 2026-11-20
+
+### Added
+- SQLAlchemy 2.x ORM models: Repository, Scan, Finding
+- Alembic migrations (initial schema `0001_initial_schema`)
+- PostgreSQL database session and dependency injection (`get_db`)
+- Repository API: register, list, get, delete monitored repositories
+- Scan API: queue scans, list scan history
+- Findings API: list findings per scan
+- Pydantic request/response schemas with consistent error responses
+- Structured logging (structlog) and centralized exception handling
+- Backend Dockerfile (non-root `appuser`, Python 3.12-slim)
+- CI step: `alembic upgrade head` against Postgres service
+- Backend tests: database models and repository/scan/finding API routes
+
+### Changed
+- Backend version bumped to 0.2.0
+- Pydantic v2 `SettingsConfigDict` replaces deprecated class-based config
+
 ## [0.1.0] - 2026-11-19
 
 ### Added

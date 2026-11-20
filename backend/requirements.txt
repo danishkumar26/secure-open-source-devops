@@ -1,26 +1,23 @@
-# Core framework (verified installable on Python 3.14)
+# Core framework (verified installable on Python 3.12+)
 fastapi==0.165.0
 uvicorn[standard]==0.54.0
+pydantic==2.14.4
 pydantic-settings==2.16.3
 
-# Database drivers (deferred to Day 2 — no Python 3.14 wheels available yet)
-# sqlalchemy[asyncio]>=2.0
-# alembic>=1.13
-# asyncpg>=0.29
-# psycopg[binary,pool]>=3.2
-
-# Validation & schemas
-pydantic>=2
-
-# HTTP client
-httpx>=0.28
+# Database (Day 2)
+sqlalchemy==2.1.9
+alembic==1.20.1
+psycopg[binary,pool]==3.3.9
 
 # Background tasks (Day 2+)
-# celery>=5.4
+celery==5.7.0
+
+# HTTP client
+httpx==0.28.1
 
 # Logging & monitoring
-structlog>=26
-python-json-logger>=4
+structlog==26.1.0
+python-json-logger==4.2.0
 
 # Testing
 pytest>=8
