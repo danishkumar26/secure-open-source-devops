@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Added
+- Minimal Next.js frontend shell (Day 3 start): dashboard page showing backend health and monitored repositories, with `Dockerfile` so `docker compose build frontend` works.
+
 ## [0.2.0] - 2026-11-20
 
 ### Added
