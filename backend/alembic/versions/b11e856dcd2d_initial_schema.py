@@ -29,7 +29,7 @@ def upgrade() -> None:
         sa.Column("html_url", sa.String(length=1024), nullable=False),
         sa.Column("description", sa.Text(), nullable=True),
         sa.Column("default_branch", sa.String(length=255), server_default="main", nullable=False),
-        sa.Column("is_private", sa.Boolean(), server_default=sa.text("0"), nullable=False),
+        sa.Column("is_private", sa.Boolean(), server_default=sa.text("false"), nullable=False),
         sa.Column("last_scanned_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column(
             "created_at",
@@ -89,7 +89,7 @@ def upgrade() -> None:
         sa.Column("advisory_id", sa.String(length=128), nullable=True),
         sa.Column("file_path", sa.String(length=1024), nullable=True),
         sa.Column("line_number", sa.Integer(), nullable=True),
-        sa.Column("is_redacted", sa.Boolean(), server_default=sa.text("0"), nullable=False),
+        sa.Column("is_redacted", sa.Boolean(), server_default=sa.text("false"), nullable=False),
         sa.Column("references", sa.JSON(), nullable=True),
         sa.Column(
             "created_at",
