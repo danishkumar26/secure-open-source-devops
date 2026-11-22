@@ -10,4 +10,4 @@
 | Day 6 | CI/CD, testing & hardening | v0.6.0-rc1 |
 | Day 7 | Final testing, docs & release | v1.0.0 |
 
-Working window: 10 PM–12 AM Asia/Karachi daily, 60–120 minutes.
+
