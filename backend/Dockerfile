@@ -10,7 +10,7 @@ WORKDIR /app
 
 # System deps for building psycopg from source if a binary wheel is missing.
 RUN apt-get update \
-    && apt-get install -y --no-recommends gcc libpq-dev \
+    && apt-get install -y --no-recommends gcc libpq-dev git gitleaks \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .

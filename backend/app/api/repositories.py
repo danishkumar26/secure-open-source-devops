@@ -1,6 +1,6 @@
 """Repository, scan, and finding API routes."""
 
-from fastapi import APIRouter, Depends, HTTPException, Path, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Path, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -12,6 +12,7 @@ from app.schemas.error import ErrorResponse
 from app.schemas.finding import FindingRead
 from app.schemas.repository import RepositoryCreate, RepositoryRead
 from app.schemas.scan import ScanCreate, ScanRead
+from app.services.scanner_service import run_scan
 
 router = APIRouter()
 
@@ -78,14 +79,16 @@ def delete_repository(repository_id: int = Path(..., ge=1), db: Session = Depend
     "/{repository_id}/scans", response_model=ScanRead, status_code=status.HTTP_202_ACCEPTED
 )
 def trigger_scan(
+    background_tasks: BackgroundTasks,
     repository_id: int = Path(..., ge=1),
     scan_in: ScanCreate | None = None,
     db: Session = Depends(get_db),
 ):
     """Queue a security scan for a repository.
 
-    Scanner execution (OSV, Trivy, Gitleaks, Semgrep, ...) is implemented in
-    Day 4. This endpoint records a pending scan so scan history works end to end.
+    Scanners (Trivy, Gitleaks, OSV) run in a background task after the
+    response is sent; the scan record transitions pending -> running ->
+    completed/failed and its findings are stored.
     """
     repository = db.get(Repository, repository_id)
     if repository is None:
@@ -95,6 +98,8 @@ def trigger_scan(
     db.add(db_scan)
     db.commit()
     db.refresh(db_scan)
+    if background_tasks is not None:
+        background_tasks.add_task(run_scan, db_scan.id)
     return db_scan
 
 
