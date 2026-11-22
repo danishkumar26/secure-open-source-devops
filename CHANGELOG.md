@@ -3,6 +3,11 @@
 ## [Unreleased]
 ### Added
 - Minimal Next.js frontend shell (Day 3 start): dashboard page showing backend health and monitored repositories, with `Dockerfile` so `docker compose build frontend` works.
+- Security scanner integrations (Day 4): Trivy filesystem vulnerability scanning, Gitleaks secret detection (findings redacted; secret values are never stored), and OSV.dev advisory lookup for `requirements.txt` pins.
+- Scanner execution service: clones the repository, runs all scanners, normalizes and stores findings, and transitions scans pending -> running -> completed/failed with per-scanner error handling and timeouts.
+- `POST /repositories/{id}/scans` now executes scanners in a background task instead of recording a pending scan only.
+- Backend Docker image installs `git` and `gitleaks` (trivy is a runtime requirement for filesystem scanning).
+- Backend tests for scanners and scan execution; external services and binaries are mocked, never called.
 
 ## [0.2.0] - 2026-11-20
 
