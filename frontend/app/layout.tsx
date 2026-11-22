@@ -1,3 +1,5 @@
+import "./globals.css";
+
 export const metadata = {
   title: "Secure Open Source DevOps Platform",
   description: "DevSecOps dashboard for open-source projects",
@@ -10,7 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="min-h-screen">{children}</body>
     </html>
   );
 }

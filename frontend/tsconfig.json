@@ -16,6 +16,10 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
     "incremental": true,
     "plugins": [
       {
