@@ -20,6 +20,7 @@ from app.models.scan import Scan, ScanStatus
 from app.scanners.base import Scanner
 from app.scanners.gitleaks import GitleaksScanner
 from app.scanners.osv import OsVScanner
+from app.scanners.semgrep import SemgrepScanner
 from app.scanners.trivy import TrivyScanner
 
 # Shortcut: one fixed clone timeout for every repository. Upgrade: make it
@@ -32,7 +33,7 @@ _REQUIREMENTS_RE = re.compile(r"^\s*([A-Za-z0-9_.\-]+)\s*==\s*([A-Za-z0-9_.\+]+)
 # Repo-level scanners run on the checked-out repository. OSV is run per
 # package parsed from requirements.txt (Day 4 scope; dependency analysis is
 # Day 5).
-SCANNERS: list[type[Scanner]] = [TrivyScanner, GitleaksScanner]
+SCANNERS: list[type[Scanner]] = [TrivyScanner, GitleaksScanner, SemgrepScanner]
 
 
 def _parse_requirements_packages(path: str) -> list[tuple[str, str]]:

@@ -13,6 +13,7 @@ from app.models.scan import Scan, ScanStatus
 from app.scanners.base import finding, normalize_severity
 from app.scanners.gitleaks import GitleaksScanner
 from app.scanners.osv import OsVScanner
+from app.scanners.semgrep import SemgrepScanner
 from app.scanners.trivy import TrivyScanner
 from app.services.scanner_service import run_scan
 
@@ -338,3 +339,44 @@ def test_trigger_scan_queues_run_scan(client, monkeypatch):
     response = client.post(f"/repositories/{repository_id}/scans")
     assert response.status_code == 202, response.text
     assert calls == [response.json()["id"]]
+
+
+def test_semgrep_scanner_parses_finding(monkeypatch):
+    output = json.dumps(
+        {
+            "results": [
+                {
+                    "check_id": "python.requests.sast",
+                    "path": "/repo/app/core/config.py",
+                    "start": {"line": 12, "col": 1},
+                    "extra": {"message": "Hardcoded secret detected", "severity": "ERROR"},
+                }
+            ]
+        }
+    )
+    monkeypatch.setattr(
+        "app.scanners.semgrep.subprocess.run",
+        lambda *a, **k: _make_subprocess_result(stdout=output),
+    )
+    findings, errors = SemgrepScanner().run("/repo")
+    assert errors == []
+    assert len(findings) == 1
+    f = findings[0]
+    assert f["tool"] == "semgrep"
+    assert f["severity"] == "high"
+    assert f["title"] == "python.requests.sast"
+    assert f["description"] == "Hardcoded secret detected"
+    assert f["file_path"] == "/repo/app/core/config.py"
+    assert f["line_number"] == 12
+    assert f["is_redacted"] is False
+    assert f["references"] == []
+
+
+def test_semgrep_scanner_missing_binary(monkeypatch):
+    monkeypatch.setattr(
+        "app.scanners.semgrep.subprocess.run",
+        lambda *a, **k: (_ for _ in ()).throw(FileNotFoundError("semgrep")),
+    )
+    findings, errors = SemgrepScanner().run("/repo")
+    assert findings == []
+    assert len(errors) == 1
