@@ -323,9 +323,7 @@ def test_trigger_scan_queues_run_scan(client, monkeypatch):
     """POST /repositories/{id}/scans returns 202 and enqueues run_scan for
     the new scan record. (run_scan itself is covered by test_run_scan_*.)"""
     calls: list[int] = []
-    monkeypatch.setattr(
-        "app.api.repositories.run_scan", lambda scan_id: calls.append(scan_id)
-    )
+    monkeypatch.setattr("app.api.repositories.run_scan", lambda scan_id: calls.append(scan_id))
     response = client.post(
         "/repositories",
         json={
