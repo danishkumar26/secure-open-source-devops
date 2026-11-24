@@ -15,6 +15,8 @@ jobs:
     # findings so vulnerable or leaky changes never merge silently.
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
 
       - name: Trivy filesystem vulnerability scan
         uses: aquasecurity/trivy-action@master
