@@ -1,0 +1,39 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_call:
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    # Reusable workflow: run the platform's own scanners against this
+    # repository on every push/PR to main. Fail the build on critical
+    # findings so vulnerable or leaky changes never merge silently.
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
+
+      - name: Trivy filesystem vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: "."
+          severity: "CRITICAL"
+          exit-code: "1"
+
+      - name: Gitleaks secret detection
+        uses: gitleaks/gitleaks-action@master
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          fail-on-detected: "true"
+
+      - name: Semgrep SAST scan
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: "p/owasp-top-ten"
