@@ -26,9 +26,10 @@ jobs:
 
       - name: Gitleaks secret detection
         uses: gitleaks/gitleaks-action@master
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           fail-on-detected: "true"
-          token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Semgrep SAST scan
         uses: returntocorp/semgrep-action@v1
