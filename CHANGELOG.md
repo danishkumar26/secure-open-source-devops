@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Day 6 CI/CD hardening: reusable `security-scan` GitHub Actions workflow runs Trivy, Gitleaks, and Semgrep against this repository on push/pull_request to main, with a fail-on-critical security gate.
 - Minimal Next.js frontend shell (Day 3 start): dashboard page showing backend health and monitored repositories, with `Dockerfile` so `docker compose build frontend` works.
 - Security scanner integrations (Day 4): Trivy filesystem vulnerability scanning, Gitleaks secret detection (findings redacted; secret values are never stored), and OSV.dev advisory lookup for `requirements.txt` pins.
 - Scanner execution service: clones the repository, runs all scanners, normalizes and stores findings, and transitions scans pending -> running -> completed/failed with per-scanner error handling and timeouts.
