@@ -21,12 +21,14 @@ jobs:
         with:
           scan-type: fs
           scan-ref: "."
-          fail-on: "critical"
+          severity: "CRITICAL"
+          exit-code: "1"
 
       - name: Gitleaks secret detection
         uses: gitleaks/gitleaks-action@master
         with:
           fail-on-detected: "true"
+          token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Semgrep SAST scan
         uses: returntocorp/semgrep-action@v1
