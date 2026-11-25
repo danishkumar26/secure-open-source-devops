@@ -14,7 +14,7 @@ jobs:
     # repository on every push/PR to main. Fail the build on critical
     # findings so vulnerable or leaky changes never merge silently.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: "0"
 
