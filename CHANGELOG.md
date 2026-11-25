@@ -1,36 +1,59 @@
 # Changelog
 
+## [1.0.0-rc1] - 2026-11-25
+### Release candidate for the Secure Open Source DevOps Platform MVP
+
+### Implemented
+- FastAPI backend with health, repository, scan, and finding APIs
+- PostgreSQL + SQLAlchemy ORM with Alembic migrations
+- Next.js dashboard: metric cards, repository table, scan history, severity chart
+- Security scanners: OSV.dev (PyPI), Trivy (filesystem), Gitleaks (secrets, redacted), Semgrep (SAST)
+- Scanner execution service: clones repo, runs scanners, stores findings, per-scanner error handling
+- GitHub Actions CI: backend lint/format/tests, database migrations
+- GitHub Actions security scan: Trivy + Gitleaks + Semgrep with fail-on-critical gate
+- Docker Compose: PostgreSQL, Redis, backend, frontend
+
+### Not yet implemented (documented limitations)
+- License analysis: no license scanner or categorization endpoint
+- SBOM generation: no Syft/Grype integration or SBOM export
+- Security reports: no JSON/CSV report download endpoint
+
+### Known limitations
+- OSV scanner only queries the PyPI ecosystem and requirements.txt pins
+- Scanner binaries (trivy, gitleaks, semgrep) must be installed in the scan environment
+
 ## [Unreleased]
 ### Added
-- Day 6 CI/CD hardening: reusable `security-scan` GitHub Actions workflow runs Trivy, Gitleaks, and Semgrep against this repository on push/pull_request to main, with a fail-on-critical security gate.
-- Minimal Next.js frontend shell (Day 3 start): dashboard page showing backend health and monitored repositories, with `Dockerfile` so `docker compose build frontend` works.
-- Security scanner integrations (Day 4): Trivy filesystem vulnerability scanning, Gitleaks secret detection (findings redacted; secret values are never stored), and OSV.dev advisory lookup for `requirements.txt` pins.
-- Scanner execution service: clones the repository, runs all scanners, normalizes and stores findings, and transitions scans pending -> running -> completed/failed with per-scanner error handling and timeouts.
-- `POST /repositories/{id}/scans` now executes scanners in a background task instead of recording a pending scan only.
-- Backend Docker image installs `git` and `gitleaks` (trivy is a runtime requirement for filesystem scanning).
-- Backend tests for scanners and scan execution; external services and binaries are mocked, never called.
+- Track frontend/lib/api.ts (was gitignored by the generic lib/ pattern)
+- GitHub issue templates (bug report, feature request)
+- Pull request template with testing and security checklist
+- Dependabot configuration for GitHub Actions, npm, pip
+
+## [0.4.0] - 2026-11-24
+### Added
+- Day 4 security scanning integrations (OSV, Trivy, Gitleaks)
+- Scanner execution service with background task and per-scanner error handling
+
+## [0.3.0] - 2026-11-23
+### Added
+- Day 3 dashboard with cards, vulnerability charts, repository listing, scan history
+- Minimal Next.js frontend shell
 
 ## [0.2.0] - 2026-11-20
-
 ### Added
 - SQLAlchemy 2.x ORM models: Repository, Scan, Finding
-- Alembic migrations (initial schema `0001_initial_schema`)
+- Alembic migrations (initial schema)
 - PostgreSQL database session and dependency injection (`get_db`)
 - Repository API: register, list, get, delete monitored repositories
 - Scan API: queue scans, list scan history
 - Findings API: list findings per scan
 - Pydantic request/response schemas with consistent error responses
-- Structured logging (structlog) and centralized exception handling
-- Backend Dockerfile (non-root `appuser`, Python 3.12-slim)
+- Structured logging and centralized exception handling
+- Backend Dockerfile (non-root appuser, Python 3.12-slim)
 - CI step: `alembic upgrade head` against Postgres service
 - Backend tests: database models and repository/scan/finding API routes
 
-### Changed
-- Backend version bumped to 0.2.0
-- Pydantic v2 `SettingsConfigDict` replaces deprecated class-based config
-
 ## [0.1.0] - 2026-11-19
-
 ### Added
 - Initial repository structure (frontend, backend, infrastructure, docs, CI)
 - FastAPI backend skeleton with health-check endpoint
