@@ -1,5 +1,7 @@
 """OSV.dev vulnerability query scanner."""
 
+import json
+
 import httpx
 
 from .base import FindingDict, Scanner, finding, normalize_severity
@@ -35,7 +37,10 @@ class OsVScanner(Scanner):
                     json={"package": {"name": package, "ecosystem": ECOSYSTEM}, "version": version},
                 )
                 response.raise_for_status()
-                data = response.json()
+                try:
+                    data = response.json()
+                except json.JSONDecodeError as exc:
+                    return findings, [f"osv response is not valid JSON: {exc}"]
         except httpx.HTTPError as exc:
             return findings, [f"osv query failed for {package} {version}: {exc}"]
         findings.extend(
