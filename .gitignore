@@ -12,6 +12,8 @@ eggs/
 .eggs/
 parts/
 lib/
+# Frontend lib/ contains hand-written API client types (not Python venv)
+!frontend/lib/
 lib64/
 sdist/
 var/
